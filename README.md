@@ -13,5 +13,6 @@ This repository will contain a mealie integration for home assistant. This proje
   * [ ] Figure out how to test integration
 * [ ] Integration tests
 * [ ] Add more endpoints / sensors
+* [ ] Extract mealie code to separate api wrapper
 * [ ] [Optional] switch to pydantic for models
 * [ ] ...
