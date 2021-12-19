@@ -12,3 +12,7 @@ class InternalClientException(BaseException):
 
 class HttpException(BaseException):
     pass
+
+
+class NoTokenException(BaseException):
+    pass

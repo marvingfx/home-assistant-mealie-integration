@@ -1,8 +1,13 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date, datetime
 from enum import Enum, auto
 from typing import Any, List, Mapping, Optional
+
+
+def parse_date(date_str: str) -> date:
+    return datetime.strptime(date_str, "%Y-%m-%d").date()
 
 
 @dataclass(frozen=True)
@@ -64,3 +69,58 @@ class Response:
     status: Status
     status_code: int
     data: Mapping[str, Any]
+
+
+@dataclass(frozen=True)
+class MealPlanResponse:
+    group: str
+    start_date: date
+    end_date: date
+    plan_days: List[PlanDay]
+    uid: int
+    shopping_list: int
+
+    @classmethod
+    def from_json(cls, json_data: Mapping[str, Any]) -> MealPlanResponse:
+        return MealPlanResponse(
+            group=json_data["group"],
+            start_date=parse_date(json_data["startDate"]),
+            end_date=parse_date(json_data["endDate"]),
+            plan_days=[
+                PlanDay.from_json(json_data=plan_day)
+                for plan_day in json_data.get("planDays", list())
+            ],
+            uid=json_data["uid"],
+            shopping_list=json_data["shoppingList"],
+        )
+
+
+@dataclass(frozen=True)
+class PlanDay:
+    date: date
+    meals: List[Meal]
+
+    @classmethod
+    def from_json(cls, json_data: Mapping[str, Any]) -> PlanDay:
+        return PlanDay(
+            date=parse_date(json_data["date"]),
+            meals=[
+                Meal.from_json(json_data=meal)
+                for meal in json_data.get("meals", list())
+            ],
+        )
+
+
+@dataclass(frozen=True)
+class Meal:
+    slug: Optional[str]
+    name: Optional[str]
+    description: Optional[str]
+
+    @classmethod
+    def from_json(cls, json_data: Mapping[str, Any]) -> Meal:
+        return Meal(
+            slug=json_data.get("slug"),
+            name=json_data.get("name"),
+            description=json_data.get("description"),
+        )
