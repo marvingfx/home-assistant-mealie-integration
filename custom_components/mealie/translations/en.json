@@ -1,0 +1,23 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "Login to Mealie",
+                "data": {
+                    "host": "Host",
+                    "username": "Username",
+                    "password": "Password"
+                }
+            }
+        },
+        "error": {
+            "cannot_connect": "Can't connect",
+            "invalid_auth": "Invalid auth",
+            "unknown": "Unkown error"
+        },
+        "abort": {
+            "already_configured": "Already configured"
+        }
+    },
+    "title": "Mealie"
+}

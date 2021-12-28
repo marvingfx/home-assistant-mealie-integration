@@ -124,3 +124,44 @@ class Meal:
             name=json_data.get("name"),
             description=json_data.get("description"),
         )
+
+
+@dataclass(frozen=True)
+class UserResponse:
+    username: str
+    full_name: str
+    email: str
+    admin: bool
+    group: str
+    favorite_recipes: List[str]
+    id: int
+    tokens: List[Token]
+
+    @classmethod
+    def from_json(cls, json_data: Mapping[str, Any]) -> UserResponse:
+        return UserResponse(
+            username=json_data["username"],
+            full_name=json_data["fullName"],
+            email=json_data["email"],
+            admin=json_data["admin"],
+            group=json_data["group"],
+            favorite_recipes=[
+                str(recipe)
+                for recipe in json_data.get("favoriteRecipes", list())
+            ],
+            id=int(json_data["id"]),
+            tokens=[
+                Token.from_json(token)
+                for token in json_data.get("tokens", list())
+            ],
+        )
+
+
+@dataclass(frozen=True)
+class Token:
+    name: str
+    id: int
+
+    @classmethod
+    def from_json(cls, json_data: Mapping[str, Any]) -> Token:
+        return Token(name=json_data["name"], id=int(json_data["id"]))

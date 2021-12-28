@@ -3,31 +3,16 @@ from __future__ import annotations
 from types import TracebackType
 from typing import Mapping, Optional, Type
 
-import aiohttp
+from aiohttp.client import ClientSession
 from aiohttp.client_exceptions import ClientError
 
-from custom_components.mealie.exception import HttpException
-from custom_components.mealie.model.model import Response, Status
+from .exception import HttpException
+from .model.model import Response, Status
 
 
 class HttpClient:
-    def __init__(self) -> None:
-        self._client: aiohttp.ClientSession = aiohttp.ClientSession()
-
-    async def close(self) -> None:
-        return await self._client.close()
-
-    async def __aenter__(self) -> HttpClient:
-        return self
-
-    async def __aexit__(
-        self,
-        exc_type: Optional[Type[BaseException]],
-        exc_val: Optional[BaseException],
-        exc_tb: Optional[TracebackType],
-    ) -> Optional[bool]:
-        await self.close()
-        return None
+    def __init__(self, client_session: ClientSession) -> None:
+        self._client = client_session
 
     async def get(self, url: str, headers: Mapping[str, str]) -> Response:
         try:
