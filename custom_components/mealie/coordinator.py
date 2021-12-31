@@ -1,5 +1,5 @@
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.helpers.aiohttp_client import async_create_clientsession
+from typing import Any
 from homeassistant.helpers.update_coordinator import (
     DataUpdateCoordinator,
     UpdateFailed,
@@ -17,6 +17,7 @@ class MealieDataUpdateCoordinator(DataUpdateCoordinator):
         self, hass: HomeAssistant, config_entry: ConfigEntry, mealie_api: Api
     ) -> None:
         self._mealie_api = mealie_api
+        self._entry = config_entry
         logger = logging.getLogger(__name__)
         super().__init__(
             hass=hass,
@@ -24,3 +25,7 @@ class MealieDataUpdateCoordinator(DataUpdateCoordinator):
             name="MealieDataUpdateCoordinator",
             update_interval=timedelta(minutes=30),
         )
+
+    async def _async_update_data(self) -> Any:
+        return await super()._async_update_data()
+        # TODO implement function
