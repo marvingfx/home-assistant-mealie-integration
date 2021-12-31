@@ -1,4 +1,4 @@
-from typing import Any, Mapping, Tuple
+from typing import Tuple
 from homeassistant import config_entries
 from homeassistant.core import HomeAssistant
 from homeassistant.const import (
@@ -7,9 +7,8 @@ from homeassistant.const import (
     CONF_PASSWORD,
     CONF_USERNAME,
 )
-from custom_components.mealie.http_client import HttpClient
+from .http_client import HttpClient
 
-from custom_components.mealie.mealie import http_client
 from .model.model import TokenResponse, UserResponse
 
 from .token_repository import TokenRepository

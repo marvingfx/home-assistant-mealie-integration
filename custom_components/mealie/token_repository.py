@@ -1,6 +1,6 @@
 from typing import Optional
 
-from custom_components.mealie.exception import NoTokenException
+from .exception import NoTokenException
 
 
 class TokenRepository:
