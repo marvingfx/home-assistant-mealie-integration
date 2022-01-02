@@ -17,12 +17,14 @@ pyproject-flake8 = "^0.0.1-alpha.2"
 pytest-mock = "^3.6.1"
 pytest-cov = "^3.0.0"
 pytest-aiohttp = "^0.3.0"
+homeassistant = "^2021.12.7"
 
 [tool.black]
 line-length = 80
 
 [tool.isort]
 profile = "black"
+known_local_folder = "mealie"
 
 [tool.flake8]
 max-line-length = 80

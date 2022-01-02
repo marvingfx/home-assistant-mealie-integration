@@ -1,22 +1,22 @@
+import logging
 from typing import Tuple
+
+import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.core import HomeAssistant
 from homeassistant.const import (
     CONF_ACCESS_TOKEN,
     CONF_HOST,
     CONF_PASSWORD,
     CONF_USERNAME,
 )
-from .http_client import HttpClient
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
-from .model.model import TokenResponse, UserResponse
-
-from .token_repository import TokenRepository
 from .api import Api
 from .const import DOMAIN
-import voluptuous as vol
-import logging
-from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from .http_client import HttpClient
+from .model.model import TokenResponse, UserResponse
+from .token_repository import TokenRepository
 
 _LOGGER = logging.getLogger(__name__)
 

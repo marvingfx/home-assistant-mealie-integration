@@ -1,17 +1,13 @@
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, Platform
 from homeassistant.core import HomeAssistant
-from homeassistant.config_entries import ConfigEntry
-from custom_components.mealie.api import Api
-
-from custom_components.mealie.const import CONF_API, CONF_COORDINATOR, DOMAIN
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+
+from custom_components.mealie.api import Api
+from custom_components.mealie.const import CONF_API, CONF_COORDINATOR, DOMAIN
 from custom_components.mealie.coordinator import MealieDataUpdateCoordinator
-
 from custom_components.mealie.http_client import HttpClient
-from custom_components.mealie.token_repository import (
-    HomeAssistantTokenRepository,
-)
-
+from custom_components.mealie.token_repository import HomeAssistantTokenRepository
 
 PLATFORMS = [Platform.SENSOR]
 

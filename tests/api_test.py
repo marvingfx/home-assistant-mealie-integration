@@ -2,6 +2,7 @@ from datetime import date
 from typing import Union
 
 import pytest
+from aiohttp.client import ClientSession
 from pytest_mock import MockerFixture
 
 from custom_components.mealie.api import Api, ApiException, ParseException
@@ -16,6 +17,12 @@ from custom_components.mealie.model.model import (
     TokenResponse,
 )
 from custom_components.mealie.token_repository import TokenRepository
+
+
+@pytest.fixture(scope="function")
+async def http_client(loop) -> HttpClient:
+    yield HttpClient(client_session=ClientSession())
+
 
 success_response = Response(
     status=Status.SUCCESS,
@@ -54,21 +61,23 @@ error_expected = ApiException
     ("response", "expected"), ([(success_response, success_expected)])
 )
 async def test_valid_response(
-    response: Response, expected: TokenResponse, mocker: MockerFixture
+    response: Response,
+    expected: TokenResponse,
+    mocker: MockerFixture,
+    http_client: HttpClient,
 ) -> None:
     mocker.patch(
         "custom_components.mealie.http_client.HttpClient.post",
         return_value=response,
     )
 
-    async with HttpClient() as http_client:
-        api = Api(
-            http_client=http_client,
-            base_url="",
-            token_repository=TokenRepository(),
-        )
-        actual = await api.get_token(username="", password="", long_token=False)
-        assert actual == expected
+    api = Api(
+        http_client=http_client,
+        base_url="",
+        token_repository=TokenRepository(),
+    )
+    actual = await api.get_token(username="", password="", long_token=False)
+    assert actual == expected
 
 
 @pytest.mark.parametrize(
@@ -79,6 +88,7 @@ async def test_invalid_response(
     response: Response,
     expected: Union[ApiException, InternalClientException, ParseException],
     mocker: MockerFixture,
+    http_client: HttpClient,
 ) -> None:
     mocker.patch(
         "custom_components.mealie.http_client.HttpClient.post",
@@ -86,40 +96,43 @@ async def test_invalid_response(
     )
 
     with pytest.raises(expected):  # type: ignore
-        async with HttpClient() as http_client:
-            api = Api(
-                http_client=http_client,
-                base_url="",
-                token_repository=TokenRepository(),
-            )
-            _ = await api.get_token(username="", password="", long_token=False)
-
-
-async def test_get_token(mocker: MockerFixture) -> None:
-    mocker.patch(
-        "custom_components.mealie.http_client.HttpClient.post",
-        return_value=success_response,
-    )
-
-    async with HttpClient() as http_client:
         api = Api(
             http_client=http_client,
             base_url="",
             token_repository=TokenRepository(),
         )
-        token_response = await api.get_token(
-            username="", password="", long_token=False
-        )
-        assert token_response == TokenResponse(
-            access_token="random_token_here", token_type="bearer"
-        )
-
-        assert api._get_authorization_header() == {
-            "Authorization": "Bearer random_token_here"
-        }
+        _ = await api.get_token(username="", password="", long_token=False)
 
 
-async def test_get_meal_plan_this_week(mocker: MockerFixture) -> None:
+async def test_get_token(
+    mocker: MockerFixture,
+    http_client: HttpClient,
+) -> None:
+    mocker.patch(
+        "custom_components.mealie.http_client.HttpClient.post",
+        return_value=success_response,
+    )
+
+    api = Api(
+        http_client=http_client,
+        base_url="",
+        token_repository=TokenRepository(),
+    )
+    token_response = await api.get_token(
+        username="", password="", long_token=False
+    )
+    assert token_response == TokenResponse(
+        access_token="random_token_here", token_type="bearer"
+    )
+
+    assert await api._get_authorization_header() == {
+        "Authorization": "Bearer random_token_here"
+    }
+
+
+async def test_get_meal_plan_this_week(
+    mocker: MockerFixture, http_client: HttpClient
+) -> None:
     mocker.patch(
         "custom_components.mealie.token_repository.TokenRepository.get_token",
         return_value="random_token_here",
@@ -202,75 +215,74 @@ async def test_get_meal_plan_this_week(mocker: MockerFixture) -> None:
         ),
     )
 
-    async with HttpClient() as http_client:
-        api = Api(
-            http_client=http_client,
-            base_url="",
-            token_repository=TokenRepository(),
-        )
-        meal_plan_response = await api.get_meal_plan_this_week()
-        assert meal_plan_response == MealPlanResponse(
-            group="Test",
-            start_date=date(2021, 11, 29),
-            end_date=date(2021, 12, 3),
-            plan_days=[
-                PlanDay(
-                    date=date(2021, 11, 29),
-                    meals=[
-                        Meal(
-                            slug="meal1",
-                            name="meal1",
-                            description="meal1 description",
-                        ),
-                        Meal(
-                            slug=None,
-                            name="meal2",
-                            description="meal2 description",
-                        ),
-                        Meal(slug=None, name="meal3", description=None),
-                    ],
-                ),
-                PlanDay(
-                    date=date(2021, 11, 30),
-                    meals=[
-                        Meal(
-                            slug="meal1",
-                            name="meal1",
-                            description="meal1 description",
-                        )
-                    ],
-                ),
-                PlanDay(
-                    date=date(2021, 12, 1),
-                    meals=[
-                        Meal(
-                            slug="meal1",
-                            name="meal1",
-                            description="meal1 description",
-                        )
-                    ],
-                ),
-                PlanDay(
-                    date=date(2021, 12, 2),
-                    meals=[
-                        Meal(
-                            slug="meal1",
-                            name="meal1",
-                            description="meal1 description",
-                        )
-                    ],
-                ),
-                PlanDay(
-                    date=date(2021, 12, 3),
-                    meals=[
-                        Meal(
-                            slug="meal1",
-                            name="meal1",
-                            description="meal1 description",
-                        )
-                    ],
-                ),
-            ],
-            uid=27,
-            shopping_list=25,
-        )
+    api = Api(
+        http_client=http_client,
+        base_url="",
+        token_repository=TokenRepository(),
+    )
+    meal_plan_response = await api.get_meal_plan_this_week()
+    assert meal_plan_response == MealPlanResponse(
+        group="Test",
+        start_date=date(2021, 11, 29),
+        end_date=date(2021, 12, 3),
+        plan_days=[
+            PlanDay(
+                date=date(2021, 11, 29),
+                meals=[
+                    Meal(
+                        slug="meal1",
+                        name="meal1",
+                        description="meal1 description",
+                    ),
+                    Meal(
+                        slug=None,
+                        name="meal2",
+                        description="meal2 description",
+                    ),
+                    Meal(slug=None, name="meal3", description=None),
+                ],
+            ),
+            PlanDay(
+                date=date(2021, 11, 30),
+                meals=[
+                    Meal(
+                        slug="meal1",
+                        name="meal1",
+                        description="meal1 description",
+                    )
+                ],
+            ),
+            PlanDay(
+                date=date(2021, 12, 1),
+                meals=[
+                    Meal(
+                        slug="meal1",
+                        name="meal1",
+                        description="meal1 description",
+                    )
+                ],
+            ),
+            PlanDay(
+                date=date(2021, 12, 2),
+                meals=[
+                    Meal(
+                        slug="meal1",
+                        name="meal1",
+                        description="meal1 description",
+                    )
+                ],
+            ),
+            PlanDay(
+                date=date(2021, 12, 3),
+                meals=[
+                    Meal(
+                        slug="meal1",
+                        name="meal1",
+                        description="meal1 description",
+                    )
+                ],
+            ),
+        ],
+        uid=27,
+        shopping_list=25,
+    )

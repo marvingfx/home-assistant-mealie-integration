@@ -10,15 +10,12 @@ def parse_date(date_str: str) -> date:
     return datetime.strptime(date_str, "%Y-%m-%d").date()
 
 
-@dataclass(frozen=True)
-class BaseResponse:
-    @classmethod
-    def from_json(cls, json_data: Mapping[str, Any]) -> BaseResponse:
-        pass
+def parse_datetime(date_str: str) -> datetime:
+    return datetime.fromisoformat(date_str)
 
 
 @dataclass(frozen=True)
-class TokenResponse(BaseResponse):
+class TokenResponse:
     access_token: str
     token_type: str
 
@@ -31,7 +28,7 @@ class TokenResponse(BaseResponse):
 
 
 @dataclass(frozen=True)
-class ErrorResponse(BaseResponse):
+class ErrorResponse:
     detail: List[Detail]
 
     @classmethod
@@ -183,4 +180,233 @@ class StatisticsResponse:
             total_groups=json_data["totalGroups"],
             uncategorized_recipes=json_data["uncategorizedRecipes"],
             untagged_recipes=json_data["untaggedRecipes"],
+        )
+
+
+@dataclass(frozen=True)
+class RecipeResponse:
+    id: int
+    name: str
+    slug: str
+    image: Optional[str]
+    description: Optional[str]
+    recipe_category: List[str]
+    tags: List[str]
+    rating: Optional[int]
+    date_added: date
+    date_updated: datetime
+    recipe_yield: Optional[str]
+    recipe_ingredient: List[RecipeIngredient]
+    recipe_instructions: List[Any]
+    nutrition: Nutrition
+    tools: List[str]
+    total_time: Optional[str]
+    prep_time: Optional[str]
+    perform_time: Optional[str]
+    settings: List[Setting]
+    assets: List[Asset]
+    notes: List[Note]
+    org_url: Optional[str]
+    extras: Optional[Mapping[str, Any]]
+    comments: List[Comment]
+
+    @classmethod
+    def from_json(cls, json_data: Mapping[str, Any]) -> RecipeResponse:
+        return RecipeResponse(
+            id=json_data["id"],
+            name=json_data["name"],
+            slug=json_data["slug"],
+            image=json_data.get("image"),
+            description=json_data.get("description"),
+            recipe_category=[
+                category for category in json_data.get("recipeCategory", [])
+            ],
+            tags=[tag for tag in json_data.get("tags", [])],
+            rating=json_data.get("rating"),
+            date_added=parse_date(json_data["dateAdded"]),
+            date_updated=parse_datetime(json_data["dateUpdated"]),
+            recipe_yield=json_data.get("recipeYield"),
+            recipe_ingredient=[
+                RecipeIngredient.from_json(data)
+                for data in json_data.get("recipeIngredient", [])
+            ],
+            recipe_instructions=[
+                RecipeStep.from_json(data)
+                for data in json_data.get("recipeInstructions", [])
+            ],
+            nutrition=Nutrition.from_json(json_data["nutrition"])
+            if json_data.get("nutrition")
+            else None,
+            tools=[tool for tool in json_data.get("tools", [])],
+            total_time=json_data.get("totalTime"),
+            prep_time=json_data.get("prepTime"),
+            perform_time=json_data.get("performTime"),
+            settings=Setting.from_json(json_data["settings"]),
+            assets=[
+                Asset.from_json(data) for data in json_data.get("assets", [])
+            ],
+            notes=[Note.from_json(data) for data in json_data.get("notes", [])],
+            org_url=json_data.get("orgURL"),
+            extras=json_data.get("extras", []),
+            comments=[
+                Comment.from_json(data) for data in json_data.get("comments")
+            ],
+        )
+
+
+@dataclass(frozen=True)
+class Comment:
+    text: str
+    id: int
+    uuid: str
+    recipe_slug: str
+    date_added: datetime
+    user: str
+
+    @classmethod
+    def from_json(cls, json_data: Mapping[str, Any]) -> Comment:
+        return Comment(
+            text=json_data["text"],
+            id=json_data["id"],
+            uuid=json_data["uuid"],
+            recipe_slug=json_data["recipeSlug"],
+            date_added=parse_datetime(json_data["dateAdded"]),
+            user=UserResponse.from_json(json_data["user"]),
+        )
+
+
+@dataclass(frozen=True)
+class Note:
+    title: Optional[str]
+    text: Optional[str]
+
+    @classmethod
+    def from_json(cls, json_data: Mapping[str, Any]) -> Note:
+        Note(
+            title=json_data.get("title"),
+            text=json_data.get("text"),
+        )
+
+
+@dataclass(frozen=True)
+class Asset:
+    name: Optional[str]
+    icon: Optional[str]
+    file_name: Optional[str]
+
+    @classmethod
+    def from_json(cls, json_data: Mapping[str, Any]) -> Asset:
+        return Asset(
+            name=json_data.get("name"),
+            icon=json_data.get("icon"),
+            file_name=json_data.get("fileName"),
+        )
+
+
+@dataclass(frozen=True)
+class Setting:
+    public: bool
+    show_nutrition: bool
+    show_assets: bool
+    landscape_view: bool
+    disable_comments: bool
+    disable_amount: bool
+
+    @classmethod
+    def from_json(cls, json_data: Mapping[str, Any]) -> Setting:
+        print(json_data)
+        return Setting(
+            public=json_data.get("public"),
+            show_nutrition=json_data.get("showNutrition"),
+            show_assets=json_data.get("showAssets"),
+            landscape_view=json_data.get("landscapeView"),
+            disable_comments=json_data.get("disableComments"),
+            disable_amount=json_data.get("disableAmount"),
+        )
+
+
+@dataclass(frozen=True)
+class Nutrition:
+    calories: Optional[str]
+    fat_content: Optional[str]
+    protein_content: Optional[str]
+    carbohydrate_content: Optional[str]
+    fiber_content: Optional[str]
+    sodium_content: Optional[str]
+    sugar_content: Optional[str]
+
+    @classmethod
+    def from_json(cls, json_data: Mapping[str, Any]) -> Nutrition:
+        return Nutrition(
+            calories=json_data.get("calories"),
+            fat_content=json_data.get("fatContent"),
+            protein_content=json_data.get("proteinContent"),
+            carbohydrate_content=json_data.get("carbohydrateContent"),
+            fiber_content=json_data.get("fiberContent"),
+            sodium_content=json_data.get("sodiumContent"),
+            sugar_content=json_data.get("sugarContent"),
+        )
+
+
+@dataclass(frozen=True)
+class RecipeIngredient:
+    title: Optional[str]
+    note: Optional[str]
+    unit: Optional[RecipeIngredientUnit]
+    food: Optional[RecipeIngredientFood]
+    disable_amount: Optional[bool]
+    quantity: Optional[int]
+
+    @classmethod
+    def from_json(cls, json_data: Mapping[str, Any]) -> RecipeIngredient:
+        return RecipeIngredient(
+            title=json_data.get("title"),
+            note=json_data.get("note"),
+            unit=RecipeIngredientUnit.from_json(json_data.get("unit"))
+            if json_data.get("unit")
+            else None,
+            food=RecipeIngredientFood.from_json(json_data.get("food"))
+            if json_data.get("food")
+            else None,
+            disable_amount=json_data.get("disableAmount"),
+            quantity=json_data.get("quantity"),
+        )
+
+
+@dataclass(frozen=True)
+class RecipeIngredientUnit:
+    name: Optional[str]
+    description: Optional[str]
+
+    @classmethod
+    def from_json(cls, json_data: Mapping[str, Any]) -> RecipeIngredientUnit:
+        return RecipeIngredientUnit(
+            name=json_data.get("name"),
+            description=json_data.get("description"),
+        )
+
+
+@dataclass(frozen=True)
+class RecipeIngredientFood:
+    name: Optional[str]
+    description: Optional[str]
+
+    @classmethod
+    def from_json(cls, json_data: Mapping[str, Any]) -> RecipeIngredientFood:
+        return RecipeIngredientFood(
+            name=json_data.get("name"),
+            description=json_data.get("description"),
+        )
+
+
+@dataclass(frozen=True)
+class RecipeStep:
+    title: Optional[str]
+    text: Optional[str]
+
+    @classmethod
+    def from_json(cls, json_data: Mapping[str, Any]) -> RecipeStep:
+        return RecipeStep(
+            title=json_data.get("title"),
+            text=json_data.get("text"),
         )

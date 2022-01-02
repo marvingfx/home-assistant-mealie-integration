@@ -1,3 +1,4 @@
+import logging
 from typing import Any, Callable, Mapping, Optional, TypeVar
 
 from custom_components.mealie.model.model import StatisticsResponse
@@ -11,6 +12,7 @@ from .exception import (
 from .http_client import HttpClient
 from .model.model import (
     MealPlanResponse,
+    RecipeResponse,
     Response,
     Status,
     TokenResponse,
@@ -19,10 +21,6 @@ from .model.model import (
 from .token_repository import TokenRepository
 
 T = TypeVar("T")
-
-import logging
-
-_LOGGER = logging.getLogger(__name__)
 
 
 class Api:
@@ -41,17 +39,16 @@ class Api:
         return f"{self._base_url}{suffix}"
 
     async def _get_authorization_header(self) -> Mapping[str, str]:
-        logging.info("getting header")
         access_token = await self._token_repository.get_token()
         return {"Authorization": f"Bearer {access_token}"}
 
     def _parse(
         self, response: Response, parser: Callable[[Mapping[str, Any]], T]
     ) -> T:
+        logging.info(response)
         if response.status == Status.FAILURE:
             raise ApiException()
         try:
-            logging.info(response)
             return parser(response.data)
         except KeyError:
             raise ParseException()
@@ -73,7 +70,6 @@ class Api:
                 data={"username": username, "password": password},
             )
 
-            _LOGGER.info(response)
         except HttpException:
             raise InternalClientException()
 
@@ -81,7 +77,6 @@ class Api:
             response=response, parser=TokenResponse.from_json
         )
 
-        _LOGGER.info(token_reponse)
         await self._token_repository.set_token(token=token_reponse.access_token)
         return token_reponse
 
@@ -103,12 +98,11 @@ class Api:
     async def get_meal_plan_this_week(self) -> Optional[MealPlanResponse]:
         url = self._url("/api/meal-plans/this-week")
         headers = self._headers | await self._get_authorization_header()
-        logging.info(headers)
 
         meal_plan_response = await self._http_client.get(
             url=url, headers=headers
         )
-        logging.info(meal_plan_response)
+
         if meal_plan_response.data:
             return self._parse(
                 response=meal_plan_response, parser=MealPlanResponse.from_json
@@ -135,3 +129,17 @@ class Api:
         return self._parse(
             response=statistics_response, parser=StatisticsResponse.from_json
         )
+
+    async def get_recipe_today(self) -> Optional[RecipeResponse]:
+        url = self._url("/api/meal-plans/today")
+
+        headers = self._headers | await self._get_authorization_header()
+
+        recipe_response = await self._http_client.get(url=url, headers=headers)
+
+        if recipe_response.data:
+            return self._parse(
+                response=recipe_response, parser=RecipeResponse.from_json
+            )
+        else:
+            return None

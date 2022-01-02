@@ -1,7 +1,7 @@
 from typing import Optional
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_ACCESS_TOKEN
-
 from homeassistant.core import HomeAssistant
 
 from .exception import NoTokenException

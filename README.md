@@ -9,11 +9,11 @@ This repository will contain a mealie integration for home assistant. This proje
   * [x] Tests
 * [ ] Add Home Assistant configuration
   * [x] Hook up API client to home assistant code
-  * [ ] Fix names of sensors
-  * [ ] Create sensors for meal of this week
+  * [x] Fix names of sensors
+  * [ ] Create sensors for meals of this week
   * [ ] Figure out how to test integration
 * [ ] Integration tests
-* [ ] Add more endpoints / sensors
+* [x] Add more endpoints / sensors
 * [ ] Extract mealie code to separate api wrapper
 * [ ] [Optional] switch to pydantic for models
 * [ ] ...

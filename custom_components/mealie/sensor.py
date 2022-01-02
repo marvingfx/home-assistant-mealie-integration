@@ -1,4 +1,5 @@
 from __future__ import annotations
+
 from datetime import date, datetime
 
 from homeassistant.components.sensor import SensorEntity
@@ -8,9 +9,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from custom_components.mealie.api import Api
-from custom_components.mealie.coordinator import MealieDataUpdateCoordinator
-
+from .api import Api
 from .const import (
     CONF_API,
     CONF_COORDINATOR,
@@ -18,15 +17,18 @@ from .const import (
     SENSOR_TYPES,
     MealieSensorEnitityDescription,
 )
+from .coordinator import MealieDataUpdateCoordinator
 
 
 async def async_setup_entry(
     hass: HomeAssistant,
-    entry: ConfigEntry,
+    entry_config: ConfigEntry,
     add_entitities_callback: AddEntitiesCallback,
 ) -> None:
-    mealie_api = hass.data[DOMAIN][entry.entry_id][CONF_API]
-    mealie_coordinator = hass.data[DOMAIN][entry.entry_id][CONF_COORDINATOR]
+    mealie_api = hass.data[DOMAIN][entry_config.entry_id][CONF_API]
+    mealie_coordinator = hass.data[DOMAIN][entry_config.entry_id][
+        CONF_COORDINATOR
+    ]
 
     add_entitities_callback(
         MealieSensor(
@@ -49,12 +51,13 @@ class MealieSensor(SensorEntity, CoordinatorEntity):
     ) -> None:
         super().__init__(coordinator=mealie_coordinator)
         self._mealie_api = mealie_api
-        self._description = description
+        self.entity_description = description
+        # self.entity_id = f"sensor.mealie.{description.key}"
 
     @property
     def native_value(self) -> StateType | date | datetime:
         return (
-            self.coordinator.data.get(self._description.key)
+            self.coordinator.data.get(self.entity_description.key)
             if self.coordinator.data
             else None
         )
