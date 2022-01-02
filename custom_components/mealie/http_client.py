@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-from types import TracebackType
-from typing import Mapping, Optional, Type
-
 from aiohttp.client import ClientSession
 from aiohttp.client_exceptions import ClientError
 

@@ -68,7 +68,7 @@ class Status(Enum):
 class Response:
     status: Status
     status_code: int
-    data: Mapping[str, Any]
+    data: Optional[Mapping[str, Any]]
 
 
 @dataclass(frozen=True)
@@ -165,3 +165,22 @@ class Token:
     @classmethod
     def from_json(cls, json_data: Mapping[str, Any]) -> Token:
         return Token(name=json_data["name"], id=int(json_data["id"]))
+
+
+@dataclass(frozen=True)
+class StatisticsResponse:
+    total_recipes: int
+    total_users: int
+    total_groups: int
+    uncategorized_recipes: int
+    untagged_recipes: int
+
+    @classmethod
+    def from_json(cls, json_data: Mapping[str, Any]) -> StatisticsResponse:
+        return StatisticsResponse(
+            total_recipes=json_data["totalRecipes"],
+            total_users=json_data["totalUsers"],
+            total_groups=json_data["totalGroups"],
+            uncategorized_recipes=json_data["uncategorizedRecipes"],
+            untagged_recipes=json_data["untaggedRecipes"],
+        )

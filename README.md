@@ -8,7 +8,8 @@ This repository will contain a mealie integration for home assistant. This proje
   * [x] Add first endpoint (meal plan for this week)
   * [x] Tests
 * [ ] Add Home Assistant configuration
-  * [ ] Hook up API client to home assistant code
+  * [x] Hook up API client to home assistant code
+  * [ ] Fix names of sensors
   * [ ] Create sensors for meal of this week
   * [ ] Figure out how to test integration
 * [ ] Integration tests

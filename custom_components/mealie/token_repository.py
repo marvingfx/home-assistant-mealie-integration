@@ -35,16 +35,12 @@ class HomeAssistantTokenRepository(TokenRepository):
     async def set_token(self, token: str) -> None:
         data = {**self._entry.data, CONF_ACCESS_TOKEN: token}
 
-        await self._hass.config_entries.async_update_entry(
-            self._entry, data=data
-        )
+        self._hass.config_entries.async_update_entry(self._entry, data=data)
 
     async def get_token(self) -> str:
-        return self._entry[CONF_ACCESS_TOKEN]
+        return self._entry.data[CONF_ACCESS_TOKEN]
 
     async def purge_token(self) -> None:
         data = {**self._entry.data, CONF_ACCESS_TOKEN: None}
 
-        await self._hass.config_entries.async_update_entry(
-            self._entry, data=data
-        )
+        self._hass.config_entries.async_update_entry(self._entry, data=data)

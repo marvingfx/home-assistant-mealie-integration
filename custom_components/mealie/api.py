@@ -1,4 +1,6 @@
-from typing import Any, Callable, Mapping, TypeVar
+from typing import Any, Callable, Mapping, Optional, TypeVar
+
+from custom_components.mealie.model.model import StatisticsResponse
 
 from .exception import (
     ApiException,
@@ -39,6 +41,7 @@ class Api:
         return f"{self._base_url}{suffix}"
 
     async def _get_authorization_header(self) -> Mapping[str, str]:
+        logging.info("getting header")
         access_token = await self._token_repository.get_token()
         return {"Authorization": f"Bearer {access_token}"}
 
@@ -48,6 +51,7 @@ class Api:
         if response.status == Status.FAILURE:
             raise ApiException()
         try:
+            logging.info(response)
             return parser(response.data)
         except KeyError:
             raise ParseException()
@@ -96,16 +100,21 @@ class Api:
         await self._token_repository.set_token(token=token_reponse.access_token)
         return token_reponse
 
-    async def get_meal_plan_this_week(self) -> MealPlanResponse:
+    async def get_meal_plan_this_week(self) -> Optional[MealPlanResponse]:
         url = self._url("/api/meal-plans/this-week")
         headers = self._headers | await self._get_authorization_header()
+        logging.info(headers)
 
         meal_plan_response = await self._http_client.get(
             url=url, headers=headers
         )
-        return self._parse(
-            response=meal_plan_response, parser=MealPlanResponse.from_json
-        )
+        logging.info(meal_plan_response)
+        if meal_plan_response.data:
+            return self._parse(
+                response=meal_plan_response, parser=MealPlanResponse.from_json
+            )
+        else:
+            return None
 
     async def get_user(self) -> UserResponse:
         url = self._url("/api/users/self")
@@ -114,4 +123,15 @@ class Api:
         user_response = await self._http_client.get(url=url, headers=headers)
         return self._parse(
             response=user_response, parser=UserResponse.from_json
+        )
+
+    async def get_statistics(self) -> StatisticsResponse:
+        url = self._url("/api/debug/statistics")
+        headers = self._headers | await self._get_authorization_header()
+
+        statistics_response = await self._http_client.get(
+            url=url, headers=headers
+        )
+        return self._parse(
+            response=statistics_response, parser=StatisticsResponse.from_json
         )

@@ -17,12 +17,12 @@ PLATFORMS = [Platform.SENSOR]
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    client_session = await async_get_clientsession(hass=hass)
+    client_session = async_get_clientsession(hass=hass)
     http_client = HttpClient(client_session=client_session)
     home_assistant_token_repository = HomeAssistantTokenRepository(
         hass=hass, entry=entry
     )
-    base_url = entry[CONF_HOST]
+    base_url = entry.data[CONF_HOST]
     mealie_api = Api(
         http_client=http_client,
         base_url=base_url,
@@ -38,6 +38,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         CONF_API: mealie_coordinator,
         CONF_COORDINATOR: mealie_coordinator,
     }
+
+    await mealie_coordinator.async_config_entry_first_refresh()
 
     hass.config_entries.async_setup_platforms(entry, PLATFORMS)
 
