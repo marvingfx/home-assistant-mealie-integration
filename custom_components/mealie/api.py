@@ -1,4 +1,3 @@
-import logging
 from typing import Any, Callable, Mapping, Optional, TypeVar
 
 from custom_components.mealie.model.model import StatisticsResponse
@@ -45,13 +44,12 @@ class Api:
     def _parse(
         self, response: Response, parser: Callable[[Mapping[str, Any]], T]
     ) -> T:
-        logging.info(response)
         if response.status == Status.FAILURE:
             raise ApiException()
         try:
             return parser(response.data)
-        except KeyError:
-            raise ParseException()
+        except KeyError as error:
+            raise ParseException() from error
 
     async def get_token(
         self, username: str, password: str, long_token: bool = False
@@ -70,8 +68,8 @@ class Api:
                 data={"username": username, "password": password},
             )
 
-        except HttpException:
-            raise InternalClientException()
+        except HttpException as error:
+            raise InternalClientException() from error
 
         token_reponse = self._parse(
             response=response, parser=TokenResponse.from_json
@@ -86,8 +84,8 @@ class Api:
 
         try:
             response = await self._http_client.get(url=url, headers=headers)
-        except HttpException:
-            raise InternalClientException()
+        except HttpException as error:
+            raise InternalClientException() from error
 
         token_reponse = self._parse(
             response=response, parser=TokenResponse.from_json

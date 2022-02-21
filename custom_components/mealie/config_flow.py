@@ -2,7 +2,8 @@ import logging
 from typing import Tuple
 
 import voluptuous as vol
-from homeassistant import config_entries
+from homeassistant.helpers import config_entry_oauth2_flow
+from homeassistant.exceptions import IntegrationError
 from homeassistant.const import (
     CONF_ACCESS_TOKEN,
     CONF_HOST,
@@ -17,8 +18,6 @@ from .const import DOMAIN
 from .http_client import HttpClient
 from .model.model import TokenResponse, UserResponse
 from .token_repository import TokenRepository
-
-_LOGGER = logging.getLogger(__name__)
 
 
 class MealieHelper:
@@ -44,9 +43,23 @@ class MealieHelper:
         return (token_response, user_response)
 
 
-class MealieConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+class MealieConfigFlow(
+    config_entry_oauth2_flow.AbstractOAuth2FlowHandler, domain=DOMAIN
+):
+    def __init__(self) -> None:
+        super().__init__()
+        self.host = None
+        self.username = None
+
+    DOMAIN = DOMAIN
+
+    @property
+    def logger(self) -> logging.Logger:
+        """Return logger."""
+        return logging.getLogger(__name__)
+
     async def async_step_user(self, user_input=None):
-        _LOGGER.info("start of async_step_user")
+        self.logger.info("start of async_step_user")
         if (
             user_input
             and user_input.get(CONF_USERNAME) is not None
@@ -54,35 +67,56 @@ class MealieConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             and user_input.get(CONF_HOST) is not None
         ):
             try:
-                _LOGGER.info("Authenticating")
+                username = user_input[CONF_USERNAME]
+                password = user_input[CONF_PASSWORD]
+                host = user_input[CONF_HOST]
+
                 token_response, user_response = await MealieHelper.authenticate(
                     hass=self.hass,
-                    username=user_input[CONF_USERNAME],
-                    password=user_input[CONF_PASSWORD],
-                    host=user_input[CONF_HOST],
+                    username=username,
+                    password=password,
+                    host=host,
                 )
 
-                await self.async_set_unique_id(user_response.id)
+                config_entry = await self.async_set_unique_id(user_response.id)
+                data = {
+                    CONF_USERNAME: username,
+                    CONF_ACCESS_TOKEN: token_response.access_token,
+                    CONF_HOST: host,
+                }
+
+                if config_entry:
+                    self.hass.config_entries.async_update_entry(
+                        config_entry, data=data
+                    )
+                    await self.hass.config_entries.async_reload(
+                        config_entry.entry_id
+                    )
+                    return self.async_abort(reason="Reauth succesful")
+
                 self._abort_if_unique_id_configured()
 
                 return self.async_create_entry(
                     title=user_response.full_name,
-                    data={
-                        CONF_ACCESS_TOKEN: token_response.access_token,
-                        CONF_HOST: user_input[CONF_HOST],
-                    },
+                    data=data,
                 )
-            except:
-                _LOGGER.exception("Something went wrong")
+            except Exception as error:
+                raise IntegrationError("Could not setup integration") from error
         else:
-            _LOGGER.info("show form")
+            self.logger.info("show form")
             return self.async_show_form(
                 step_id="user",
                 data_schema=vol.Schema(
                     {
-                        vol.Required(CONF_USERNAME): str,
+                        vol.Required(CONF_HOST, default=self.host): str,
+                        vol.Required(CONF_USERNAME, default=self.username): str,
                         vol.Required(CONF_PASSWORD): str,
-                        vol.Required(CONF_HOST): str,
                     }
                 ),
             )
+
+    async def async_step_reauth(self, user_input=None):
+        self.host = user_input.get(CONF_HOST)
+        self.username = user_input.get(CONF_USERNAME)
+
+        return await self.async_step_user()
