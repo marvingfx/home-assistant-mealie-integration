@@ -4,13 +4,13 @@ from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.helpers.update_coordinator import (
     DataUpdateCoordinator,
     UpdateFailed,
 )
 
 from custom_components.mealie.exception import ApiException, ParseException
-from homeassistant.exceptions import ConfigEntryAuthFailed
 
 from .api import Api
 from .const import (

@@ -1,4 +1,5 @@
 import logging
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_ACCESS_TOKEN, CONF_HOST, Platform
 from homeassistant.core import HomeAssistant
@@ -8,9 +9,7 @@ from custom_components.mealie.api import Api
 from custom_components.mealie.const import CONF_API, CONF_COORDINATOR, DOMAIN
 from custom_components.mealie.coordinator import MealieDataUpdateCoordinator
 from custom_components.mealie.http_client import HttpClient
-from custom_components.mealie.token_repository import (
-    HomeAssistantTokenRepository,
-)
+from custom_components.mealie.token_repository import HomeAssistantTokenRepository
 
 PLATFORMS = [Platform.SENSOR]
 
@@ -24,7 +23,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     await home_assistant_token_repository.set_token(
         entry.data[CONF_ACCESS_TOKEN]
     )
-    
+
     base_url = entry.data[CONF_HOST]
     mealie_api = Api(
         http_client=http_client,

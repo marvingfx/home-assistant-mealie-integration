@@ -1,16 +1,15 @@
 from __future__ import annotations
 
 from datetime import date, datetime
+from typing import Mapping
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import CONF_HOST
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from homeassistant.const import CONF_HOST
-
-from typing import Mapping
 
 from custom_components.mealie.model.model import (
     MealPlanResponse,
@@ -24,8 +23,8 @@ from .const import (
     DOMAIN,
     SENSOR_TYPES,
     MealieSensorEnitityDescription,
-    next_meal_sensor_entitity_description,
     meal_plan_sensor_entity_description,
+    next_meal_sensor_entitity_description,
 )
 from .coordinator import MealieDataUpdateCoordinator
 

@@ -2,8 +2,6 @@ import logging
 from typing import Tuple
 
 import voluptuous as vol
-from homeassistant.helpers import config_entry_oauth2_flow
-from homeassistant.exceptions import IntegrationError
 from homeassistant.const import (
     CONF_ACCESS_TOKEN,
     CONF_HOST,
@@ -11,6 +9,8 @@ from homeassistant.const import (
     CONF_USERNAME,
 )
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import IntegrationError
+from homeassistant.helpers import config_entry_oauth2_flow
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
 from .api import Api
