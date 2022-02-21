@@ -1,5 +1,14 @@
 # Mealie Integration
-This repository will contain a mealie integration for home assistant. This project is still under construction.
+This repository contains a mealie integration for home assistant. This project is still under construction. You can set up your own mealie integration using [this guide](https://hay-kot.github.io/mealie/documentation/getting-started/introduction/).
+
+## Included sensors
+* Total number of recipies
+* Number of untagged recipies
+* Number of uncategorized recipes
+* Current meal plan
+  * Start and and date
+* Today's recipe
+  * Url to the recipe
 
 ## TODO
 * [x] Create API client
@@ -10,7 +19,6 @@ This repository will contain a mealie integration for home assistant. This proje
 * [ ] Add Home Assistant configuration
   * [x] Hook up API client to home assistant code
   * [x] Fix names of sensors
-  * [ ] Create sensors for meals of this week
   * [ ] Figure out how to test integration
 * [ ] Integration tests
 * [x] Add more endpoints / sensors
