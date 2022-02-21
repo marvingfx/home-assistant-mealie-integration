@@ -20,6 +20,7 @@ This repository contains a mealie integration for home assistant. This project i
   * [x] Hook up API client to home assistant code
   * [x] Fix names of sensors
   * [ ] Figure out how to test integration
+* [ ] Translations for sensor names / units
 * [ ] Integration tests
 * [x] Add more endpoints / sensors
 * [ ] Extract mealie code to separate api wrapper
