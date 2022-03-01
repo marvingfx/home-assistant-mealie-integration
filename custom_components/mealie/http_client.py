@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from typing import Mapping
+
 from aiohttp.client import ClientSession
 from aiohttp.client_exceptions import ClientError
 

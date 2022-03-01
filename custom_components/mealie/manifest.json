@@ -6,10 +6,6 @@
   "iot_class": "local_polling",
   "documentation": "https://github.com/marvingfx/home-assistant-mealie-integration",
   "issue_tracker": "https://github.com/marvingfx/home-assistant-mealie-integration/issues",
-  "requirements": [
-    "aiohttp==3.8.1"
-  ],
-  "codeowners": [
-    "@marvingfx"
-  ]
+  "requirements": ["aiohttp==3.8.1"],
+  "codeowners": ["@marvingfx"]
 }

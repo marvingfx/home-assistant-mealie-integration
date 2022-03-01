@@ -47,6 +47,17 @@ test = ["coverage[toml] (>=4.5)", "hypothesis (>=4.0)", "pytest (>=6.0)", "pytes
 trio = ["trio (>=0.16)"]
 
 [[package]]
+name = "aspy.refactor-imports"
+version = "2.2.1"
+description = "Utilities for refactoring imports in python-like syntax."
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+cached-property = "*"
+
+[[package]]
 name = "astral"
 version = "2.2"
 description = "Calculations for the position of the sun and moon."
@@ -131,6 +142,14 @@ colorama = ["colorama (>=0.4.3)"]
 d = ["aiohttp (>=3.7.4)"]
 jupyter = ["ipython (>=7.8.0)", "tokenize-rt (>=3.2.0)"]
 uvloop = ["uvloop (>=0.15.2)"]
+
+[[package]]
+name = "cached-property"
+version = "1.5.2"
+description = "A decorator for caching properties in classes."
+category = "dev"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "certifi"
@@ -626,6 +645,17 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "reorder-python-imports"
+version = "2.7.1"
+description = "Tool for reordering python imports"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+"aspy.refactor-imports" = ">=2.2.1"
+
+[[package]]
 name = "requests"
 version = "2.27.1"
 description = "Python HTTP for Humans."
@@ -752,7 +782,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "~3.9"
-content-hash = "80bbddae992a6b2cf9d666034aae336bbc291e083ce4c13c433fe8078ea7732a"
+content-hash = "0e107149318fa16b77b381f5c313e123190d38006967612cbcbc0eb9a7838329"
 
 [metadata.files]
 aiohttp = [
@@ -837,6 +867,10 @@ anyio = [
     {file = "anyio-3.5.0-py3-none-any.whl", hash = "sha256:b5fa16c5ff93fa1046f2eeb5bbff2dad4d3514d6cda61d02816dba34fa8c3c2e"},
     {file = "anyio-3.5.0.tar.gz", hash = "sha256:a0aeffe2fb1fdf374a8e4b471444f0f3ac4fb9f5a5b542b48824475e0042a5a6"},
 ]
+"aspy.refactor-imports" = [
+    {file = "aspy.refactor_imports-2.2.1-py2.py3-none-any.whl", hash = "sha256:ace9ca78abf6cfdd20ea1a321b75b20c8cc2c1af58aecb9dc4ba9d6f70f74645"},
+    {file = "aspy.refactor_imports-2.2.1.tar.gz", hash = "sha256:f5b2fcbf9fd68361168588f14eda64d502d029eefe632d15094cd0683ae12984"},
+]
 astral = [
     {file = "astral-2.2-py2.py3-none-any.whl", hash = "sha256:b9ef70faf32e81a8ba174d21e8f29dc0b53b409ef035f27e0749ddc13cb5982a"},
     {file = "astral-2.2.tar.gz", hash = "sha256:e41d9967d5c48be421346552f0f4dedad43ff39a83574f5ff2ad32b6627b6fbe"},
@@ -902,6 +936,10 @@ black = [
     {file = "black-22.1.0-cp39-cp39-win_amd64.whl", hash = "sha256:373922fc66676133ddc3e754e4509196a8c392fec3f5ca4486673e685a421321"},
     {file = "black-22.1.0-py3-none-any.whl", hash = "sha256:3524739d76b6b3ed1132422bf9d82123cd1705086723bc3e235ca39fd21c667d"},
     {file = "black-22.1.0.tar.gz", hash = "sha256:a7c0192d35635f6fc1174be575cb7915e92e5dd629ee79fdaf0dcfa41a80afb5"},
+]
+cached-property = [
+    {file = "cached-property-1.5.2.tar.gz", hash = "sha256:9fa5755838eecbb2d234c3aa390bd80fbd3ac6b6869109bfc1b499f7bd89a130"},
+    {file = "cached_property-1.5.2-py2.py3-none-any.whl", hash = "sha256:df4f613cf7ad9a588cc381aaf4a512d26265ecebd5eb9e1ba12f1319eb85a6a0"},
 ]
 certifi = [
     {file = "certifi-2021.10.8-py2.py3-none-any.whl", hash = "sha256:d62a0163eb4c2344ac042ab2bdf75399a71a2d8c7d47eac2e2ee91b9d6339569"},
@@ -1374,6 +1412,10 @@ pyyaml = [
     {file = "PyYAML-6.0-cp39-cp39-win32.whl", hash = "sha256:b5b9eccad747aabaaffbc6064800670f0c297e52c12754eb1d976c57e4f74dcb"},
     {file = "PyYAML-6.0-cp39-cp39-win_amd64.whl", hash = "sha256:b3d267842bf12586ba6c734f89d1f5b871df0273157918b0ccefa29deb05c21c"},
     {file = "PyYAML-6.0.tar.gz", hash = "sha256:68fb519c14306fec9720a2a5b45bc9f0c8d1b9c72adf45c37baedfcd949c35a2"},
+]
+reorder-python-imports = [
+    {file = "reorder_python_imports-2.7.1-py2.py3-none-any.whl", hash = "sha256:5477c008cd7a5f2dbe32a35e90d74b5a3427468731441f033034310e427143a3"},
+    {file = "reorder_python_imports-2.7.1.tar.gz", hash = "sha256:1ae34422f13f5a4b4669f340774909d721bfc0a8311973c70b3a50540b595bc5"},
 ]
 requests = [
     {file = "requests-2.27.1-py2.py3-none-any.whl", hash = "sha256:f22fa1e554c9ddfd16e6e41ac79759e17be9e492b3587efa038054674760e72d"},

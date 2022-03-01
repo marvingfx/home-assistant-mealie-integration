@@ -11,7 +11,10 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from custom_components.mealie.model.model import MealPlanResponse, RecipeResponse
+from custom_components.mealie.model.model import (
+    MealPlanResponse,
+    RecipeResponse,
+)
 
 from .api import Api
 from .const import (

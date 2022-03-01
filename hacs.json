@@ -1,5 +1,5 @@
 {
-    "name": "Mealie",
-    "domains": ["sensor"],
-    "homeassistant": "2022.2.9"
-  }
+  "name": "Mealie",
+  "domains": ["sensor"],
+  "homeassistant": "2022.2.9"
+}

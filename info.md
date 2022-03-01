@@ -5,31 +5,35 @@
 [![GitHub Activity][commits-shield]][commits]
 
 {% if prerelease %}
+
 # This is a Beta version!
+
 {% endif %}
 
 # Mealie Integration
+
 This repository contains a mealie integration for home assistant. This project is still under construction. You can set up your own mealie integration using [this guide](https://hay-kot.github.io/mealie/documentation/getting-started/introduction/).
 
 **This integration will set up the following platforms.**
 
-| Platform        | Description                         |
-| --------------- | ----------------------------------- |
-| `sensor`        | Show info from API.                 |
+| Platform | Description         |
+| -------- | ------------------- |
+| `sensor` | Show info from API. |
 
 ## Installation
+
 1. Install via HACS
 2. Configure via UI
 
-
 ## Included sensors
-* Total number of recipies
-* Number of untagged recipies
-* Number of uncategorized recipes
-* Current meal plan
-  * Start and and date
-* Today's recipe
-  * Url to the recipe
+
+- Total number of recipies
+- Number of untagged recipies
+- Number of uncategorized recipes
+- Current meal plan
+  - Start and and date
+- Today's recipe
+  - Url to the recipe
 
 [hacs]: https://hacs.xyz
 [hacsbadge]: https://img.shields.io/badge/HACS-Custom-41BDF5.svg
