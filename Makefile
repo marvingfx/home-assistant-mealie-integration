@@ -24,3 +24,6 @@ check: check-black check-isort check-flake8 check-mypy
 
 test:
 	@poetry run pytest -sv --cov=custom_components tests/
+
+update-requirements:
+	@poetry export -f requirements.txt --output requirements_dev.txt --dev --without-hashes && poetry export -f requirements.txt --output requirements_test.txt --dev --without-hashes
