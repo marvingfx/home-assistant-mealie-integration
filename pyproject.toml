@@ -10,7 +10,7 @@ aiohttp = "^3.8.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.5"
-black = "^21.12b0"
+black = "^22.1"
 isort = "^5.10.1"
 mypy = "^0.920"
 pyproject-flake8 = "^0.0.1-alpha.2"
