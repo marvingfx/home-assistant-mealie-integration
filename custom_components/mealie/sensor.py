@@ -11,10 +11,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.typing import StateType
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from custom_components.mealie.model.model import (
-    MealPlanResponse,
-    RecipeResponse,
-)
+from custom_components.mealie.model.model import MealPlanResponse, RecipeResponse
 
 from .api import Api
 from .const import (
@@ -35,9 +32,7 @@ async def async_setup_entry(
     add_entitities_callback: AddEntitiesCallback,
 ) -> None:
     mealie_api = hass.data[DOMAIN][entry_config.entry_id][CONF_API]
-    mealie_coordinator = hass.data[DOMAIN][entry_config.entry_id][
-        CONF_COORDINATOR
-    ]
+    mealie_coordinator = hass.data[DOMAIN][entry_config.entry_id][CONF_COORDINATOR]
 
     add_entitities_callback(
         MealieSensor(

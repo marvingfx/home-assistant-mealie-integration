@@ -20,9 +20,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     home_assistant_token_repository = HomeAssistantTokenRepository(
         hass=hass, entry=entry
     )
-    await home_assistant_token_repository.set_token(
-        entry.data[CONF_ACCESS_TOKEN]
-    )
+    await home_assistant_token_repository.set_token(entry.data[CONF_ACCESS_TOKEN])
 
     base_url = entry.data[CONF_HOST]
     mealie_api = Api(

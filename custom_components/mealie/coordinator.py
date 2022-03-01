@@ -1,14 +1,11 @@
-import logging
 from datetime import timedelta
+import logging
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryAuthFailed
-from homeassistant.helpers.update_coordinator import (
-    DataUpdateCoordinator,
-    UpdateFailed,
-)
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from custom_components.mealie.exception import ApiException, ParseException
 
@@ -45,9 +42,7 @@ class MealieDataUpdateCoordinator(DataUpdateCoordinator):
         try:
             statistics_response = await self._mealie_api.get_statistics()
             next_recipe_response = await self._mealie_api.get_recipe_today()
-            meal_plan_response = (
-                await self._mealie_api.get_meal_plan_this_week()
-            )
+            meal_plan_response = await self._mealie_api.get_meal_plan_this_week()
 
             return {
                 SENSOR_MEAL_PLAN_KEY: meal_plan_response,

@@ -11,9 +11,7 @@ SENSOR_NO_RECIPES_KEY: Final[str] = "total_recipes"
 SENSOR_NO_RECIPES_NAME: Final[str] = "Total number of recipes"
 
 SENSOR_NO_UNCATEGORIZED_RECIPES_KEY: Final[str] = "uncategorized_recipes"
-SENSOR_NO_UNCATEGORIZED_RECIPES_NAME: Final[
-    str
-] = "Number of uncategorized recipes"
+SENSOR_NO_UNCATEGORIZED_RECIPES_NAME: Final[str] = "Number of uncategorized recipes"
 
 SENSOR_NO_UNTAGGED_RECIPES_KEY: Final[str] = "untagged_recipes"
 SENSOR_NO_UNTAGGED_RECIPES_NAME: Final[str] = "Number of untagged recipes"

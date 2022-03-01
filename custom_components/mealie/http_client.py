@@ -17,9 +17,7 @@ class HttpClient:
                 status = Status.SUCCESS if resp.ok else Status.FAILURE
                 status_code = resp.status
                 data = await resp.json()
-                return Response(
-                    status=status, status_code=status_code, data=data
-                )
+                return Response(status=status, status_code=status_code, data=data)
         except ClientError:
             raise HttpException()
 
@@ -27,15 +25,11 @@ class HttpClient:
         self, url: str, headers: Mapping[str, str], data: Mapping[str, str]
     ) -> Response:
         try:
-            async with self._client.post(
-                url=url, data=data, headers=headers
-            ) as resp:
+            async with self._client.post(url=url, data=data, headers=headers) as resp:
                 status = Status.SUCCESS if resp.ok else Status.FAILURE
                 status_code = resp.status
                 data = await resp.json()
-                return Response(
-                    status=status, status_code=status_code, data=data
-                )
+                return Response(status=status, status_code=status_code, data=data)
         except ClientError:
             raise HttpException()
 
@@ -43,15 +37,11 @@ class HttpClient:
         self, url: str, headers: Mapping[str, str], data: Mapping[str, str]
     ) -> Response:
         try:
-            async with self._client.put(
-                url=url, data=data, headers=headers
-            ) as resp:
+            async with self._client.put(url=url, data=data, headers=headers) as resp:
                 status = Status.SUCCESS if resp.ok else Status.FAILURE
                 status_code = resp.status
                 data = await resp.json()
-                return Response(
-                    status=status, status_code=status_code, data=data
-                )
+                return Response(status=status, status_code=status_code, data=data)
         except ClientError:
             raise HttpException()
 

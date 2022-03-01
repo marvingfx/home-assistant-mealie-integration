@@ -143,13 +143,11 @@ class UserResponse:
             admin=json_data["admin"],
             group=json_data["group"],
             favorite_recipes=[
-                str(recipe)
-                for recipe in json_data.get("favoriteRecipes", list())
+                str(recipe) for recipe in json_data.get("favoriteRecipes", list())
             ],
             id=int(json_data["id"]),
             tokens=[
-                Token.from_json(token)
-                for token in json_data.get("tokens", list())
+                Token.from_json(token) for token in json_data.get("tokens", list())
             ],
         )
 
@@ -242,15 +240,11 @@ class RecipeResponse:
             prep_time=json_data.get("prepTime"),
             perform_time=json_data.get("performTime"),
             settings=Setting.from_json(json_data["settings"]),
-            assets=[
-                Asset.from_json(data) for data in json_data.get("assets", [])
-            ],
+            assets=[Asset.from_json(data) for data in json_data.get("assets", [])],
             notes=[Note.from_json(data) for data in json_data.get("notes", [])],
             org_url=json_data.get("orgURL"),
             extras=json_data.get("extras", []),
-            comments=[
-                Comment.from_json(data) for data in json_data.get("comments")
-            ],
+            comments=[Comment.from_json(data) for data in json_data.get("comments")],
         )
 
 

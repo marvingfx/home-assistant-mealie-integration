@@ -41,9 +41,7 @@ class Api:
         access_token = await self._token_repository.get_token()
         return {"Authorization": f"Bearer {access_token}"}
 
-    def _parse(
-        self, response: Response, parser: Callable[[Mapping[str, Any]], T]
-    ) -> T:
+    def _parse(self, response: Response, parser: Callable[[Mapping[str, Any]], T]) -> T:
         if response.status == Status.FAILURE:
             raise ApiException()
         try:
@@ -71,9 +69,7 @@ class Api:
         except HttpException as error:
             raise InternalClientException() from error
 
-        token_reponse = self._parse(
-            response=response, parser=TokenResponse.from_json
-        )
+        token_reponse = self._parse(response=response, parser=TokenResponse.from_json)
 
         await self._token_repository.set_token(token=token_reponse.access_token)
         return token_reponse
@@ -87,9 +83,7 @@ class Api:
         except HttpException as error:
             raise InternalClientException() from error
 
-        token_reponse = self._parse(
-            response=response, parser=TokenResponse.from_json
-        )
+        token_reponse = self._parse(response=response, parser=TokenResponse.from_json)
         await self._token_repository.set_token(token=token_reponse.access_token)
         return token_reponse
 
@@ -97,9 +91,7 @@ class Api:
         url = self._url("/api/meal-plans/this-week")
         headers = self._headers | await self._get_authorization_header()
 
-        meal_plan_response = await self._http_client.get(
-            url=url, headers=headers
-        )
+        meal_plan_response = await self._http_client.get(url=url, headers=headers)
 
         if meal_plan_response.data:
             return self._parse(
@@ -113,17 +105,13 @@ class Api:
         headers = self._headers | await self._get_authorization_header()
 
         user_response = await self._http_client.get(url=url, headers=headers)
-        return self._parse(
-            response=user_response, parser=UserResponse.from_json
-        )
+        return self._parse(response=user_response, parser=UserResponse.from_json)
 
     async def get_statistics(self) -> StatisticsResponse:
         url = self._url("/api/debug/statistics")
         headers = self._headers | await self._get_authorization_header()
 
-        statistics_response = await self._http_client.get(
-            url=url, headers=headers
-        )
+        statistics_response = await self._http_client.get(url=url, headers=headers)
         return self._parse(
             response=statistics_response, parser=StatisticsResponse.from_json
         )

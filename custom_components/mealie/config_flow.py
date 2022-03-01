@@ -1,7 +1,6 @@
 import logging
 from typing import Tuple
 
-import voluptuous as vol
 from homeassistant.const import (
     CONF_ACCESS_TOKEN,
     CONF_HOST,
@@ -12,6 +11,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import IntegrationError
 from homeassistant.helpers import config_entry_oauth2_flow
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+import voluptuous as vol
 
 from .api import Api
 from .const import DOMAIN
@@ -35,9 +35,7 @@ class MealieHelper:
             token_repository=TokenRepository(),
         )
 
-        token_response = await api.get_token(
-            username=username, password=password
-        )
+        token_response = await api.get_token(username=username, password=password)
         user_response = await api.get_user()
 
         return (token_response, user_response)
@@ -86,12 +84,8 @@ class MealieConfigFlow(
                 }
 
                 if config_entry:
-                    self.hass.config_entries.async_update_entry(
-                        config_entry, data=data
-                    )
-                    await self.hass.config_entries.async_reload(
-                        config_entry.entry_id
-                    )
+                    self.hass.config_entries.async_update_entry(config_entry, data=data)
+                    await self.hass.config_entries.async_reload(config_entry.entry_id)
                     return self.async_abort(reason="Reauth succesful")
 
                 self._abort_if_unique_id_configured()
