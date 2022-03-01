@@ -1,8 +1,8 @@
 from datetime import date
 from typing import Union
 
-import pytest
 from aiohttp.client import ClientSession
+import pytest
 from pytest_mock import MockerFixture
 
 from custom_components.mealie.api import Api, ApiException, ParseException
@@ -33,9 +33,7 @@ success_response = Response(
     },
 )
 
-success_expected = TokenResponse(
-    access_token="random_token_here", token_type="bearer"
-)
+success_expected = TokenResponse(access_token="random_token_here", token_type="bearer")
 
 invalid_response = Response(
     status=Status.SUCCESS,
@@ -118,9 +116,7 @@ async def test_get_token(
         base_url="",
         token_repository=TokenRepository(),
     )
-    token_response = await api.get_token(
-        username="", password="", long_token=False
-    )
+    token_response = await api.get_token(username="", password="", long_token=False)
     assert token_response == TokenResponse(
         access_token="random_token_here", token_type="bearer"
     )
