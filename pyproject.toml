@@ -17,7 +17,7 @@ pyproject-flake8 = "^0.0.1-alpha.2"
 pytest-mock = "^3.6.1"
 pytest-cov = "^3.0.0"
 pytest-aiohttp = "^1.0.0"
-homeassistant = "^2022.3.5"
+homeassistant = "^2022.4.7"
 reorder-python-imports = "^2.7.1"
 
 [tool.isort]
