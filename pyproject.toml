@@ -7,18 +7,19 @@ authors = ["Marvin Straathof <marvinstraathof@gmail.com>"]
 [tool.poetry.dependencies]
 python = "~3.9"
 aiohttp = "^3.8.1"
+poetryup = "^0.10.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "^7.1.1"
-black = "^22.1.0"
+pytest = "^7.1.2"
+black = "^22.6.0"
 isort = "^5.10.1"
 mypy = "^0.931"
 pyproject-flake8 = "^0.0.1-alpha.2"
 pytest-mock = "^3.6.1"
 pytest-cov = "^3.0.0"
-pytest-aiohttp = "^1.0.0"
-homeassistant = "^2022.3.5"
-reorder-python-imports = "^2.7.1"
+pytest-aiohttp = "^1.0.4"
+homeassistant = "^2022.8.7"
+reorder-python-imports = "^2.8.0"
 
 [tool.isort]
 profile = "black"
