@@ -1,3 +1,5 @@
+# ARCHIVED DUE TO NEW VERSION OF MEALIE COMING ANYTIME
+
 # Mealie Integration
 
 This repository contains a mealie integration for home assistant. This project is still under construction. You can set up your own mealie integration using [this guide](https://hay-kot.github.io/mealie/documentation/getting-started/introduction/).
